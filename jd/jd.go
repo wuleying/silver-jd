@@ -2,38 +2,13 @@ package jd
 
 import (
 	"compress/gzip"
-	"fmt"
 	"github.com/go-clog/clog"
 	"github.com/wuleying/silver-jd/util"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 	"time"
-)
-
-var (
-	URLForQR = [...]string{
-		"https://passport.jd.com/new/login.aspx",
-		"https://qr.m.jd.com/show",
-		"https://qr.m.jd.com/check",
-		"https://passport.jd.com/uc/qrCodeTicketValidation",
-		"http://home.jd.com/getUserVerifyRight.action",
-	}
-
-	DefaultHeaders = map[string]string{
-		"User-Agent":      "Chrome/51.0.2704.103",
-		"ContentType":     "application/json",
-		"Connection":      "keep-alive",
-		"Accept-Encoding": "gzip, deflate",
-		"Accept-Language": "zh-CN,zh;q=0.8",
-	}
-
-	maxNameLen   = 40
-	cookieFile   = fmt.Sprintf("%s/%s", util.ROOT_DIR, "cookies/jd.cookies")
-	qrCodeFile   = "cookies/jd.qr"
-	strSeperater = strings.Repeat("+", 60)
 )
 
 // JDConfig ...
@@ -70,7 +45,7 @@ func NewJingDong(option JDConfig) *JingDong {
 
 	jd.jar = util.NewSimpleJar(util.JarOption{
 		JarType:  util.JarGob,
-		Filename: cookieFile,
+		Filename: util.COOKIE_FILE,
 	})
 
 	if err := jd.jar.Load(); err != nil {
@@ -109,7 +84,7 @@ func (jd *JingDong) getResponse(method, URL string, queryFun func(URL string) st
 	if req, err = http.NewRequest(method, queryURL, nil); err != nil {
 		return nil, err
 	}
-	applyCustomHeader(req, DefaultHeaders)
+	applyCustomHeader(req, util.DEFAULT_HEADERS)
 
 	if resp, err = jd.client.Do(req); err != nil {
 		return nil, err

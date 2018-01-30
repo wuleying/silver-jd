@@ -6,6 +6,7 @@ import (
 	"fmt"
 	sjson "github.com/bitly/go-simplejson"
 	"github.com/go-clog/clog"
+	"github.com/wuleying/silver-jd/util"
 	"io"
 	"io/ioutil"
 	"mime"
@@ -21,9 +22,9 @@ import (
 )
 
 func (jd *JingDong) Login(args ...interface{}) error {
-	clog.Info(strSeperater)
+	clog.Info(util.STRING_SEPERATER)
 
-	if jd.validateLogin(URLForQR[4]) {
+	if jd.validateLogin(util.URL_FOR_QR[4]) {
 		clog.Info("无需重复登录。")
 		return nil
 	}
@@ -36,11 +37,11 @@ func (jd *JingDong) Login(args ...interface{}) error {
 	clog.Info("请打开京东手机客户端，准备扫码登录:")
 	jd.jar.Clean()
 
-	if err = jd.loginPage(URLForQR[0]); err != nil {
+	if err = jd.loginPage(util.URL_FOR_QR[0]); err != nil {
 		return err
 	}
 
-	if qrImg, err = jd.loadQRCode(URLForQR[1]); err != nil {
+	if qrImg, err = jd.loadQRCode(util.URL_FOR_QR[1]); err != nil {
 		return err
 	}
 
@@ -50,11 +51,11 @@ func (jd *JingDong) Login(args ...interface{}) error {
 		return err
 	}
 
-	if err = jd.waitForScan(URLForQR[2]); err != nil {
+	if err = jd.waitForScan(util.URL_FOR_QR[2]); err != nil {
 		return err
 	}
 
-	if err = jd.validateQRToken(URLForQR[3]); err != nil {
+	if err = jd.validateQRToken(util.URL_FOR_QR[3]); err != nil {
 		return err
 	}
 
@@ -112,7 +113,7 @@ func (jd *JingDong) loginPage(URL string) error {
 		return err
 	}
 
-	applyCustomHeader(req, DefaultHeaders)
+	applyCustomHeader(req, util.DEFAULT_HEADERS)
 
 	if resp, err = jd.client.Do(req); err != nil {
 		clog.Info("请求登录页失败: %+v", err)
@@ -142,7 +143,7 @@ func (jd *JingDong) loadQRCode(URL string) (string, error) {
 		return "", err
 	}
 
-	applyCustomHeader(req, DefaultHeaders)
+	applyCustomHeader(req, util.DEFAULT_HEADERS)
 	if resp, err = jd.client.Do(req); err != nil {
 		clog.Error(0, "下载二维码失败: %+v", err)
 		return "", err
@@ -153,10 +154,10 @@ func (jd *JingDong) loadQRCode(URL string) (string, error) {
 		clog.Error(0, "http status : %d/%s", resp.StatusCode, resp.Status)
 	}
 
-	filename := qrCodeFile + ".png"
+	filename := util.QR_CODE_FILE + ".png"
 	mt, _, _ := mime.ParseMediaType(resp.Header.Get("Content-Type"))
 	if typ, e := mime.ExtensionsByType(mt); e == nil {
-		filename = qrCodeFile + typ[0]
+		filename = util.QR_CODE_FILE + typ[0]
 	}
 
 	dir, _ := os.Getwd()
@@ -260,7 +261,7 @@ func (jd *JingDong) waitForScan(URL string) error {
 	// mush have
 	req.Host = "qr.m.jd.com"
 	req.Header.Set("Referer", "https://passport.jd.com/new/login.aspx")
-	applyCustomHeader(req, DefaultHeaders)
+	applyCustomHeader(req, util.DEFAULT_HEADERS)
 
 	for retry := 50; retry != 0; retry-- {
 		if resp, err = jd.client.Do(req); err != nil {

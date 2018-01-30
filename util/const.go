@@ -1,6 +1,8 @@
 package util
 
 import (
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -23,4 +25,25 @@ var (
 	ROOT_DIR = FileGetParentDirectory(FileGetCurrentDirectory())
 	// 当前时间
 	CURRENT_TIME = time.Now().String()
+
+	URL_FOR_QR = [...]string{
+		"https://passport.jd.com/new/login.aspx",
+		"https://qr.m.jd.com/show",
+		"https://qr.m.jd.com/check",
+		"https://passport.jd.com/uc/qrCodeTicketValidation",
+		"http://home.jd.com/getUserVerifyRight.action",
+	}
+
+	DEFAULT_HEADERS = map[string]string{
+		"User-Agent":      "Chrome/51.0.2704.103",
+		"ContentType":     "application/json",
+		"Connection":      "keep-alive",
+		"Accept-Encoding": "gzip, deflate",
+		"Accept-Language": "zh-CN,zh;q=0.8",
+	}
+
+	MAX_NAME_LENGTH  = 40
+	COOKIE_FILE      = fmt.Sprintf("%s/%s", ROOT_DIR, "cookies/jd.cookies")
+	QR_CODE_FILE     = "cookies/jd.qr"
+	STRING_SEPERATER = strings.Repeat("+", 60)
 )
