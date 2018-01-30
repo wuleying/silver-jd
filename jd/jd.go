@@ -8,6 +8,9 @@ import (
     "strings"
     "time"
     "github.com/wuleying/silver-jd/util"
+    "compress/gzip"
+    "io/ioutil"
+    "io"
 )
 
 const (
@@ -101,4 +104,38 @@ func (jd *JingDong) Release() {
             log.Panic("Failed to persist cookiejar. error %+v.", err)
         }
     }
+}
+
+func (jd *JingDong) getResponse(method, URL string, queryFun func(URL string) string) ([]byte, error) {
+    var (
+        err  error
+        req  *http.Request
+        resp *http.Response
+    )
+
+    queryURL := URL
+    if queryFun != nil {
+        queryURL = queryFun(URL)
+    }
+
+    if req, err = http.NewRequest(method, queryURL, nil); err != nil {
+        return nil, err
+    }
+    applyCustomHeader(req, DefaultHeaders)
+
+    if resp, err = jd.client.Do(req); err != nil {
+        return nil, err
+    }
+
+    defer resp.Body.Close()
+    var reader io.Reader
+
+    switch resp.Header.Get("Content-Encoding") {
+    case "gzip":
+        reader, _ = gzip.NewReader(resp.Body)
+    default:
+        reader = resp.Body
+    }
+
+    return ioutil.ReadAll(reader)
 }

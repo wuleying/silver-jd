@@ -153,9 +153,6 @@ func (jd *JingDong) loadQRCode(URL string) (string, error) {
         clog.Error(0, "http status : %d/%s", resp.StatusCode, resp.Status)
     }
 
-    // from mime get QRCode image type
-    //  content-type:image/png
-    //
     filename := qrCodeFile + ".png"
     mt, _, _ := mime.ParseMediaType(resp.Header.Get("Content-Type"))
     if typ, e := mime.ExtensionsByType(mt); e == nil {
