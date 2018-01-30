@@ -1,6 +1,7 @@
 PROJECT_NAME=silver-jd
-SRC_DIR=$(CURDIR)
-BIN_DIR=$(CURDIR)/bin
+PACKAGE = github.com/wuleying/silver-jd
+BASE_DIR = $(GOPATH)/src/$(PACKAGE)
+BIN_DIR=$(BASE_DIR)/bin
 
 # Go parameters
 GO_CMD=go
@@ -12,7 +13,9 @@ GO_GET=$(GO_CMD) get
 all: build
 
 build:
-	$(GO_BUILD) -o $(BIN_DIR)/$(PROJECT_NAME) -v $(SRC_DIR)/*.go
+	@echo [INFO] BASE=$(BASE)
+	@echo [INFO] BIN_DIR=$(BIN_DIR)
+	$(GO_BUILD) -o $(BIN_DIR)/$(PROJECT_NAME) -v $(BASE_DIR)/*.go
 	@echo "Build completed"
 
 clean:
@@ -24,6 +27,4 @@ test:
 	@echo "Todo"
 
 run:
-	@echo [INFO] SRC_DIR=$(SRC_DIR)
-	@echo [INFO] BIN_DIR=$(BIN_DIR)
 	$(BIN_DIR)/$(PROJECT_NAME)
