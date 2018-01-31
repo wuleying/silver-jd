@@ -6,7 +6,6 @@ import (
 	"github.com/go-clog/clog"
 	"github.com/wuleying/silver-jd/jd"
 	"os"
-	"time"
 )
 
 const (
@@ -22,7 +21,7 @@ var (
 
 func init() {
 	if err := clog.New(clog.CONSOLE, clog.ConsoleConfig{
-		Level:      clog.INFO,
+		Level:      clog.TRACE,
 		BufferSize: 100},
 	); err != nil {
 		fmt.Printf("init console log failed. error %+v.", err)
@@ -34,16 +33,6 @@ func main() {
 	flag.Parse()
 	defer clog.Shutdown()
 
-	jd := jd.NewJingDong(jd.JDConfig{
-		Period:     time.Millisecond * time.Duration(*period),
-		ShipArea:   *area,
-		AutoRush:   *rush,
-		AutoSubmit: *order,
-	})
-
-	defer jd.Release()
-	if err := jd.Login(); err == nil {
-		// 登录成功
-		jd.VipSignIn()
-	}
+	account := &jd.Account{"luoliang", "123123"}
+	account.LoginPC()
 }

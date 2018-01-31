@@ -1,22 +1,23 @@
 package util
 
 import (
-	"fmt"
-	"strings"
 	"time"
 )
 
 // 全局常量
 const (
-	URL_SKU_STATE    = "https://c0.3.cn/stocks"
-	URL_GOODS_DETS   = "http://item.jd.com/%s.html"
-	URL_GOODS_PRICE  = "http://p.3.cn/prices/mgets"
-	URL_ADD_TO_CART  = "https://cart.jd.com/gate.action"
-	URL_CHANGE_COUNT = "http://cart.jd.com/changeNum.action"
-	URL_CART_INFO    = "https://cart.jd.com/cart.action"
-	URL_ORDER_INFO   = "http://trade.jd.com/shopping/order/getOrderInfo.action"
-	URL_SUBMIT_ORDER = "http://trade.jd.com/shopping/order/submitOrder.action"
-	URL_SIGN_IN      = "https://vip.jd.com/common/signin.html"
+	// URL地址
+	URL_LOGIN = "http://passport.jd.com/new/login.aspx"
+
+	// 权限
+	FILE_READ_MODE  = 0644
+	FILE_WRITE_MODE = 0666
+	DIR_READ_MODE   = 0755
+	DIR_WRITE_MODE  = 0777
+
+	// clog skip级别
+	CLOG_SKIP_DEFAULT      = 0
+	CLOG_SKIP_DISPLAY_INFO = 2
 )
 
 // 全局变量
@@ -26,24 +27,11 @@ var (
 	// 当前时间
 	CURRENT_TIME = time.Now().String()
 
-	URL_FOR_QR = [...]string{
-		"https://passport.jd.com/new/login.aspx",
-		"https://qr.m.jd.com/show",
-		"https://qr.m.jd.com/check",
-		"https://passport.jd.com/uc/qrCodeTicketValidation",
-		"http://home.jd.com/getUserVerifyRight.action",
-	}
-
-	DEFAULT_HEADERS = map[string]string{
-		"User-Agent":      "Chrome/51.0.2704.103",
-		"ContentType":     "application/json",
+	HEADERS_DEFAULT = map[string]string{
+		"User-Agent":      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
+		"ContentType":     "text/html; charset=utf-8",
 		"Connection":      "keep-alive",
-		"Accept-Encoding": "gzip, deflate",
+		"Accept-Encoding": "deflate",
 		"Accept-Language": "zh-CN,zh;q=0.8",
 	}
-
-	MAX_NAME_LENGTH  = 40
-	COOKIE_FILE      = fmt.Sprintf("%s/%s", ROOT_DIR, "cookies/jd.cookies")
-	QR_CODE_FILE     = "cookies/jd.qr"
-	STRING_SEPERATER = strings.Repeat("+", 60)
 )
