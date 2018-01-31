@@ -7,7 +7,8 @@ import (
 // 全局常量
 const (
 	// URL地址
-	URL_LOGIN = "http://passport.jd.com/new/login.aspx"
+	URL_LOGIN         = "http://passport.jd.com/new/login.aspx"
+	URL_LOGIN_SERVICE = "https://passport.jd.com/uc/loginService?uuid=%s&ReturnUrl=%s&r=%s&version=%s"
 
 	// 权限
 	FILE_READ_MODE  = 0644

@@ -33,6 +33,6 @@ func main() {
 	flag.Parse()
 	defer clog.Shutdown()
 
-	account := &jd.Account{"luoliang", "123123"}
+	account := &jd.Account{"1231", "123123"}
 	account.LoginPC()
 }
