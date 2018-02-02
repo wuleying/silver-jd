@@ -32,7 +32,7 @@ def main():
     if jobs_failed:
         print('= 失败的任务: {}'.format(jobs_failed))
     else:
-        print('= 全部成功 ~')
+        print('= 全部成功.')
 
     print('=================================')
 
@@ -55,7 +55,7 @@ def make_session() -> requests.Session:
             session.cookies = cookies
             logging.info('# 从文件加载 cookies 成功.')
         except Exception as e:
-            logging.info('# 未能成功载入 cookies, 从头开始~')
+            logging.info('# 未能成功载入 cookies, 从头开始.')
 
     return session
 

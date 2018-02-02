@@ -5,7 +5,7 @@ import sys
 from base64 import b85decode
 from pathlib import Path
 
-log_format = '%(asctime)s %(name)s[%(module)s] %(levelname)s: %(message)s'
+log_format = '%(asctime)s %(name)s[%(module)-6s] %(levelname)s: %(message)s'
 logging.basicConfig(format=log_format, level=logging.INFO)
 
 
@@ -56,7 +56,7 @@ def load_config():
     args = parser.parse_args()
 
     config_name = args.config or 'config.json'
-    logging.info('使用配置文件 "{}".'.format(config_name))
+    logging.info('使用配置文件 {}.'.format(config_name))
 
     config_file = Path(__file__).parent.joinpath('../conf/', config_name)
 
