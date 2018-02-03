@@ -3,10 +3,12 @@ import os
 import pickle
 import traceback
 from pathlib import Path
+
 import requests
 
 from config import config
 from job import jobs_all
+
 
 def main():
     session = make_session()
@@ -59,6 +61,7 @@ def make_session() -> requests.Session:
 
     return session
 
+
 def save_session(session):
     data = pickle.dumps(session.cookies)
 
@@ -66,6 +69,7 @@ def save_session(session):
     data_dir.mkdir(exist_ok=True)
     data_file = data_dir.joinpath('cookies')
     data_file.write_bytes(data)
+
 
 def proxy_patch():
     import warnings
@@ -78,6 +82,7 @@ def proxy_patch():
 
     requests.Session = XSession
     warnings.simplefilter('ignore', InsecureRequestWarning)
+
 
 if __name__ == '__main__':
     if config.debug and os.getenv('HTTPS_PROXY'):

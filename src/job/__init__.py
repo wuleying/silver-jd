@@ -3,11 +3,12 @@ import logging
 logger = logging.getLogger('jobs')
 
 from config import config
+from .buy import Buy
 
 __all__ = ['jobs_all', 'logger']
 
 jobs_mobile = []
-jobs_web = []
+jobs_web = [Buy]
 jobs_all = jobs_mobile + jobs_web
 
 
