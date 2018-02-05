@@ -7,7 +7,7 @@ import job
 class Login:
     job_name = '登录'
 
-    index_url = 'https://bk.jd.com/m/channel/login/daka.html'
+    index_url = 'https://home.m.jd.com'
     login_url = 'https://home.m.jd.com'
     test_url = index_url
 
