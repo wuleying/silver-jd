@@ -32,7 +32,8 @@ class Login:
                 self.logger.error('登录失败: {}'.format(repr(e)))
 
         if is_login:
-            self.job_success = True
+            if self.app_run():
+                self.job_success = True
 
         self.logger.info('Job End.')
 
@@ -47,3 +48,6 @@ class Login:
     def login(self):
         cookies = browser.get_cookies(self.login_url)
         self.session.cookies.update(cookies)
+
+    def app_run(self):
+        return True
