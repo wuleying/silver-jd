@@ -11,7 +11,8 @@ passport_url = 'https://passport.jd.com/new/login.aspx'
 login_url = 'https://passport.jd.com/uc/loginService'
 
 passport_headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) '
+                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36',
     'ContentType': 'text/html; charset=utf-8',
     'Accept-Encoding': 'gzip, deflate, sdch',
     'Accept-Language': 'zh-CN,zh;q=0.8',
@@ -19,7 +20,8 @@ passport_headers = {
 }
 
 login_headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) '
+                  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36',
     'Referer': 'https://passport.jd.com/uc/login?type=logout',
     'X-Requested-With': 'XMLHttpRequest'
 }
@@ -68,9 +70,9 @@ class JD(object):
         self.track_id = re.compile(patt).findall(str(request_session.cookies))
         js = json.loads(req2.text[1:-1])
         if js.get('success'):
-            self.logger.info('Success!')
+            self.logger.info('Login success!')
         else:
-            self.logger.info('Failure!')
+            self.logger.info('Login failure!')
 
         return True
 
