@@ -16,16 +16,16 @@ passport_headers = {
 }
 
 login_headers = {
-    'Referer': 'https://passport.jd.com/uc/login?ltype=logout',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36',
+    'Referer': 'https://passport.jd.com/uc/login?type=logout',
     'X-Requested-With': 'XMLHttpRequest'
 }
 
-s = requests.Session()
-s.headers = passport_headers
+request_session = requests.Session()
+request_session.headers = passport_headers
 
 # 请求登录页面
-request = s.get(url=url, headers=passport_headers)
+request = request_session.get(url=url, headers=passport_headers)
 sel = etree.HTML(request.content)
 
 uuid = sel.xpath('//input[@id="uuid"]/@value')[0]
@@ -36,7 +36,7 @@ sa_token = sel.xpath('//input[@id="sa_token"]/@value')[0]
 
 verification = 'http:' + sel.xpath('//img[@id="JD_Verification1"]/@src2')[0]
 
-r = random.random()
+random_num = random.random()
 login_url = 'https://passport.jd.com/uc/loginService'
 
 
@@ -65,15 +65,15 @@ class JD(object):
 
         if verification != '':
             # 手动输验证码
-            params['authcode'] = input('请输入验证码：')
+            params['authcode'] = input('Please input verification: ')
 
-        req2 = s.post(login_url, data=params, headers=login_headers)
+        req2 = request_session.post(login_url, data=params, headers=login_headers)
         patt = '<Cookie TrackID=(.*?) for .jd.com/>'
-        self.track_id = re.compile(patt).findall(str(s.cookies))
+        self.track_id = re.compile(patt).findall(str(request_session.cookies))
         js = json.loads(req2.text[1:-1])
         if js.get('success'):
-            print('登录成功')
+            print('Success!')
         else:
-            print('登录失败')
+            print('failure!')
 
         return True
