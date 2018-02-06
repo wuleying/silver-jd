@@ -5,6 +5,8 @@ import random
 import requests
 from lxml import etree
 
+import jd
+
 passport_url = 'https://passport.jd.com/new/login.aspx'
 login_url = 'https://passport.jd.com/uc/loginService'
 
@@ -33,6 +35,9 @@ random_num = random.random()
 
 
 class JD(object):
+    logger = jd.logger
+
+    # 初始化
     def __init__(self, username, password):
         self.track_id = ''
         self.pid = ''
@@ -50,6 +55,7 @@ class JD(object):
             'authcode': '',
         }
 
+    # 登录
     def login(self):
         print(self.auth_code)
 
@@ -62,8 +68,16 @@ class JD(object):
         self.track_id = re.compile(patt).findall(str(request_session.cookies))
         js = json.loads(req2.text[1:-1])
         if js.get('success'):
-            print('Success!')
+            self.logger.info('Success!')
         else:
-            print('failure!')
+            self.logger.info('Failure!')
 
+        return True
+
+    # 加购物车
+    def cart(self):
+        return True
+
+    # 提交订单
+    def submit(self):
         return True
