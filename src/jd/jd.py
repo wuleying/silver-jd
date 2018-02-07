@@ -94,30 +94,32 @@ class JD(object):
         print(self.auth_code)
 
         if self.auth_code != '':
-            # 手动输验证码
-            self.params['authcode'] = input('Please input verification: ')
+            self.params['authcode'] = input('请输入验证码: ')
 
         request_login = self.request_session.post(self.login_url, data=self.params, headers=self.login_headers)
         patt = '<Cookie TrackID=(.*?) for .jd.com/>'
         self.track_id = re.compile(patt).findall(str(self.request_session.cookies))
         js = json.loads(request_login.text[1:-1])
+
+        self.logger.info(js)
+
         if js.get('success'):
-            self.logger.info('Login success!')
+            self.logger.info('登录成功！')
         else:
-            self.logger.error('Login failure!')
+            self.logger.error('登录失败！')
             exit(0)
 
     # 加购物车
     def cart(self):
-        self.pid = input('Please input goods code:')
-        self.count = input('Please input goods count:')
+        self.pid = input('请输入商品编号：')
+        self.count = input('请输入商品数量：')
 
         request_add_cart = self.request_session.get(self.add_cart_url.format(self.pid, self.count))
 
         if re.compile('<title>(.*?)</title>').findall(request_add_cart.text)[0] == '商品已成功加入购物车':
-            self.logger.info('Add cart success!')
+            self.logger.info('添加购物车成功！')
         else:
-            self.logger.error('Add cart failure!')
+            self.logger.error('添加购物车失败！')
             exit(0)
 
     # 提交订单
@@ -156,8 +158,6 @@ class JD(object):
         while True:
             request_stock = self.request_session.get(self.stock_url.format(self.pid, self.area_code))
             js = json.loads(request_stock.text)
-
-            self.logger.info(js['stock']['StockState'])
 
             # 33有货 34无货
             if js['stock']['StockState'] == 33:

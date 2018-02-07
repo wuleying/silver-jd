@@ -3,6 +3,5 @@
   "jd": {
     "username": "",
     "password": ""
-  },
-  "jobs_skip": ["DataStation"]
+  }
 }
