@@ -13,7 +13,7 @@ class JD(object):
     # 请求URL
     passport_url = 'https://passport.jd.com/new/login.aspx'
     login_url = 'https://passport.jd.com/uc/loginService'
-    cart_url = 'https://cart.jd.com/gate.action?pid={}&pcount={}&ptype=1'
+    add_cart_url = 'https://cart.jd.com/gate.action?pid={}&pcount={}&ptype=1'
 
     passport_headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) '
@@ -32,7 +32,6 @@ class JD(object):
         'X-Requested-With': 'XMLHttpRequest'
     }
 
-    sel = ''
     request_session = ''
 
     track_id = ''
@@ -49,18 +48,18 @@ class JD(object):
 
             # 请求登录页面
             request = self.request_session.get(url=self.passport_url, headers=self.passport_headers)
-            self.sel = etree.HTML(request.content)
+            sel = etree.HTML(request.content)
 
-        self.auth_code = 'http:' + self.sel.xpath('//img[@id="JD_Verification1"]/@src2')[0]
+        self.auth_code = 'http:' + sel.xpath('//img[@id="JD_Verification1"]/@src2')[0]
         self.params = {
-            'uuid': self.sel.xpath('//input[@id="uuid"]/@value')[0],
-            'eid': self.sel.xpath('//input[@id="eid"]/@value')[0],
-            '_t': self.sel.xpath('//input[@id="token"]/@value')[0],
+            'uuid': sel.xpath('//input[@id="uuid"]/@value')[0],
+            'eid': sel.xpath('//input[@id="eid"]/@value')[0],
+            '_t': sel.xpath('//input[@id="token"]/@value')[0],
             'loginType': 'c',
             'loginname': username,
             'nloginpwd': password,
-            'pubKey': self.sel.xpath('//input[@id="pubKey"]/@value')[0],
-            'sa_token': self.sel.xpath('//input[@id="sa_token"]/@value')[0],
+            'pubKey': sel.xpath('//input[@id="pubKey"]/@value')[0],
+            'sa_token': sel.xpath('//input[@id="sa_token"]/@value')[0],
             'chkRememberMe': '',
             'authcode': '',
         }
@@ -73,10 +72,10 @@ class JD(object):
             # 手动输验证码
             self.params['authcode'] = input('Please input verification: ')
 
-        login_request = self.request_session.post(self.login_url, data=self.params, headers=self.login_headers)
+        request_login = self.request_session.post(self.login_url, data=self.params, headers=self.login_headers)
         patt = '<Cookie TrackID=(.*?) for .jd.com/>'
         self.track_id = re.compile(patt).findall(str(self.request_session.cookies))
-        js = json.loads(login_request.text[1:-1])
+        js = json.loads(request_login.text[1:-1])
         if js.get('success'):
             self.logger.info('Login success!')
         else:
@@ -88,10 +87,9 @@ class JD(object):
         self.pid = input('Please input goods code:')
         self.count = input('Please input goods count:')
 
-        cart_request = self.request_session.get(self.cart_url.format(self.pid, self.count))
-        self.logger.info(self.cart_url.format(self.pid, self.count))
+        request_add_cart = self.request_session.get(self.add_cart_url.format(self.pid, self.count))
 
-        if re.compile('<title>(.*?)</title>').findall(cart_request.text)[0] == '商品已成功加入购物车':
+        if re.compile('<title>(.*?)</title>').findall(request_add_cart.text)[0] == '商品已成功加入购物车':
             self.logger.info('Add cart success!')
         else:
             self.logger.error('Add cart failure!')
