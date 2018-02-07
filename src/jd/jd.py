@@ -34,15 +34,18 @@ class JD(object):
     pid = ''
     sel = ''
 
-    request_session = requests.Session()
-    request_session.headers = passport_headers
-
-
+    request_session = ''
 
     # 初始化
     def __init__(self, username, password):
-        request = self.request_session.get(url=self.passport_url, headers=self.passport_headers)
-        self.sel = etree.HTML(request.content)
+
+        if self.request_session == '':
+            self.request_session = requests.Session()
+            self.request_session.headers = self.passport_headers
+
+            # 请求登录页面
+            request = self.request_session.get(url=self.passport_url, headers=self.passport_headers)
+            self.sel = etree.HTML(request.content)
 
         self.auth_code = 'http:' + self.sel.xpath('//img[@id="JD_Verification1"]/@src2')[0]
         self.params = {
@@ -57,12 +60,6 @@ class JD(object):
             'chkRememberMe': '',
             'authcode': '',
         }
-
-
-
-        # 请求登录页面
-        request = self.request_session.get(url=self.passport_url, headers=self.passport_headers)
-        sel = etree.HTML(request.content)
 
     # 登录
     def login(self):
