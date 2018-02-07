@@ -10,8 +10,10 @@ import jd
 class JD(object):
     logger = jd.logger
 
+    # 请求URL
     passport_url = 'https://passport.jd.com/new/login.aspx'
     login_url = 'https://passport.jd.com/uc/loginService'
+    cart_url = 'https://cart.jd.com/gate.action?pid={}&pcount={}&ptype=1'
 
     passport_headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) '
@@ -30,15 +32,17 @@ class JD(object):
         'X-Requested-With': 'XMLHttpRequest'
     }
 
-    track_id = ''
-    pid = ''
     sel = ''
-
     request_session = ''
+
+    track_id = ''
+    # 商品ID
+    pid = ''
+    # 商品数量
+    count = ''
 
     # 初始化
     def __init__(self, username, password):
-
         if self.request_session == '':
             self.request_session = requests.Session()
             self.request_session.headers = self.passport_headers
@@ -76,13 +80,22 @@ class JD(object):
         if js.get('success'):
             self.logger.info('Login success!')
         else:
-            self.logger.info('Login failure!')
-
-        return True
+            self.logger.error('Login failure!')
+            exit(0)
 
     # 加购物车
     def cart(self):
-        return True
+        self.pid = input('Please input goods code:')
+        self.count = input('Please input goods count:')
+
+        cart_request = self.request_session.get(self.cart_url.format(self.pid, self.count))
+        self.logger.info(self.cart_url.format(self.pid, self.count))
+
+        if re.compile('<title>(.*?)</title>').findall(cart_request.text)[0] == '商品已成功加入购物车':
+            self.logger.info('Add cart success!')
+        else:
+            self.logger.error('Add cart failure!')
+            exit(0)
 
     # 提交订单
     def submit(self):
