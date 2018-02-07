@@ -65,10 +65,10 @@ class JD(object):
             # 手动输验证码
             self.params['authcode'] = input('Please input verification: ')
 
-        req2 = request_session.post(login_url, data=self.params, headers=login_headers)
+        login_request = request_session.post(login_url, data=self.params, headers=login_headers)
         patt = '<Cookie TrackID=(.*?) for .jd.com/>'
         self.track_id = re.compile(patt).findall(str(request_session.cookies))
-        js = json.loads(req2.text[1:-1])
+        js = json.loads(login_request.text[1:-1])
         if js.get('success'):
             self.logger.info('Login success!')
         else:
